@@ -4,9 +4,13 @@
   "license": "MIT",
   "husky": {
     "hooks": {
-      "pre-commit": "echo 'test'"
+      "pre-commit": "lint-staged"
     }
   },
+  "lint-staged": {
+    "*.js": ["eslint --fix", "git add"]
+  },
+  "main": "src/server.js",
   "scripts": {
     "dev": "nodemon src/server.js"
   },
@@ -14,7 +18,11 @@
     "express": "^4.17.1"
   },
   "devDependencies": {
+    "eslint": "^7.7.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.0",
     "husky": "^4.2.5",
+    "lint-staged": "^10.2.11",
     "nodemon": "^2.0.4",
     "sucrase": "^3.15.0"
   }
