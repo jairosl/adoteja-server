@@ -12,6 +12,9 @@ exports.up = async (knex) =>
       table.integer('whatsapp').notNullable();
       table.text('city').notNullable();
       table.text('uf').notNullable();
+
+      table.timestamp('created_at').defaultTo(knex.fn.now());
+      table.timestamp('updated_at').defaultTo(knex.fn.now());
     })
     .then(() => knex.raw(onUpdateTrigger('users')));
 
