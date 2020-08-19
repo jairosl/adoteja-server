@@ -1,6 +1,8 @@
+// import AppError from "../../errors/AppError";
+
 class useController {
   async index(req, res) {
-    return res.json({ hello: "world" });
+    res.json({ hello: "world" });
   }
 }
 
