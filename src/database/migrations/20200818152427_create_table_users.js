@@ -7,7 +7,7 @@ exports.up = async (knex) =>
       table.text('uuid').unique();
       table.text('name').notNullable();
       table.date('age').notNullable();
-      table.text('email').notNullable();
+      table.text('email').notNullable().unique();
       table.text('password').notNullable();
       table.integer('whatsapp').notNullable();
       table.text('city').notNullable();
