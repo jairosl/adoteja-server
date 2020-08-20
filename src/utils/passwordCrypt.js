@@ -5,7 +5,7 @@ const generatePassword = (password) => {
   return hash;
 };
 
-export const verifyPassaword = (password, hash) => {
+export const verifyPassword = (password, hash) => {
   const verify = bcrypt.compareSync(password, hash);
   return verify;
 };
