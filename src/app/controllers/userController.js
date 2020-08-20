@@ -1,11 +1,31 @@
-import AppError from "../../errors/AppError";
+import AppError from '../../errors/AppError';
 import db from '../../database';
-import genereteUuid from "../../utils/generateUuid";
-import generatePassword from "../../utils/passwordCrypt";
+import genereteUuid from '../../utils/generateUuid';
+import generatePassword from '../../utils/passwordCrypt';
 
 class useController {
   async index(req, res) {
-    res.json({ hello: "world" });
+    const { limit, page } = req.query;
+
+    const [{ count }] = await db('users').count('uuid');
+
+    const totalPages = Math.floor(count / limit);
+
+    if (count <= limit || totalPages === 0) {
+      const users = await db('users').select("*");
+      return res.json(users);
+    }
+
+    if (page > totalPages) {
+      throw new AppError("exceeded the page limit");
+    }
+
+    try {
+      const users = await db('users').limit(limit).offset((page - 1) * limit);
+      return res.json({ totalPages, users });
+    } catch (err) {
+      throw new Error(err.message);
+    }
   }
 
   async create(req, res) {
