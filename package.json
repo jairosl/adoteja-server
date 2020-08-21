@@ -39,10 +39,13 @@
     "cz-conventional-changelog": "3.2.0",
     "eslint": "^7.7.0",
     "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-prettier": "^3.1.4",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",
     "nodemon": "^2.0.4",
+    "prettier": "^2.0.5",
     "sucrase": "^3.15.0"
   },
   "config": {

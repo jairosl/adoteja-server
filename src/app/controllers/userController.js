@@ -12,16 +12,18 @@ class useController {
     const totalPages = Math.floor(count / limit);
 
     if (count <= limit || totalPages === 0) {
-      const users = await db('users').select("*");
+      const users = await db('users').select('*');
       return res.json(users);
     }
 
     if (page > totalPages) {
-      throw new AppError("exceeded the page limit");
+      throw new AppError('exceeded the page limit');
     }
 
     try {
-      const users = await db('users').limit(limit).offset((page - 1) * limit);
+      const users = await db('users')
+        .limit(limit)
+        .offset((page - 1) * limit);
       return res.json({ totalPages, users });
     } catch (err) {
       throw new Error(err.message);
@@ -29,22 +31,29 @@ class useController {
   }
 
   async create(req, res) {
-    const {
-      name, email, password, age, whatsapp, uf, city,
-    } = req.body;
+    const { name, email, password, age, whatsapp, uf, city } = req.body;
 
     const uuid = await genereteUuid();
 
     const user = await db('users').where({ email });
 
-    if (user.length !== 0) throw new AppError("User already exists");
+    if (user.length !== 0) throw new AppError('User already exists');
 
     const hash = await generatePassword(password);
 
     try {
-      const userUuid = await db('users').insert({
-        uuid, name, email, password: hash, age, whatsapp, uf, city,
-      }).returning("uuid");
+      const userUuid = await db('users')
+        .insert({
+          uuid,
+          name,
+          email,
+          password: hash,
+          age,
+          whatsapp,
+          uf,
+          city,
+        })
+        .returning('uuid');
 
       res.status(201).json({ userUuid });
     } catch (err) {
@@ -53,16 +62,18 @@ class useController {
   }
 
   async update(req, res) {
-    const {
-      name, email, password, age, whatsapp, uf, city,
-    } = req.body;
+    const { name, email, password, age, whatsapp, uf, city } = req.body;
     const { id_user } = req.params;
 
     const user = await db('users').where({ uuid: id_user }).first();
 
-    const userEmailExist = await db('users').whereNot({ uuid: id_user }).where({ email });
+    const userEmailExist = await db('users')
+      .whereNot({ uuid: id_user })
+      .where({ email });
 
-    if (!user || userEmailExist.length >= 1) throw new AppError("User not found");
+    if (!user || userEmailExist.length >= 1) {
+      throw new AppError('User not found');
+    }
 
     const hash = await generatePassword(password);
 
@@ -89,14 +100,14 @@ class useController {
 
     const user = await db('users').where({ uuid: id_user }).first();
 
-    if (!user) throw new AppError("User not found");
+    if (!user) throw new AppError('User not found');
 
     const key = await verifyPassword(password, user.password);
 
-    if (key === false) throw new AppError("Password invalid", 406);
+    if (key === false) throw new AppError('Password invalid', 406);
 
     try {
-      await db("users").where({ uuid: id_user }).del();
+      await db('users').where({ uuid: id_user }).del();
       res.status(200).send();
     } catch (err) {
       throw new AppError(err.message);
