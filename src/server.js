@@ -12,6 +12,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+app.use('/images', express.static(`${__dirname}/../temp`));
+
 app.use(routes);
 
 app.use((err, req, res, next) => {
