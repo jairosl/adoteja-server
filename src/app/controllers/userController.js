@@ -12,16 +12,18 @@ class useController {
     const totalPages = Math.floor(count / limit);
 
     if (count <= limit || totalPages === 0) {
-      const users = await db('users').select("*");
+      const users = await db('users').select('*');
       return res.json(users);
     }
 
     if (page > totalPages) {
-      throw new AppError("exceeded the page limit");
+      throw new AppError('exceeded the page limit');
     }
 
     try {
-      const users = await db('users').limit(limit).offset((page - 1) * limit);
+      const users = await db('users')
+        .limit(limit)
+        .offset((page - 1) * limit);
       return res.json({ totalPages, users });
     } catch (err) {
       throw new Error(err.message);
@@ -37,14 +39,23 @@ class useController {
 
     const user = await db('users').where({ email });
 
-    if (user.length !== 0) throw new AppError("User already exists");
+    if (user.length !== 0) throw new AppError('User already exists');
 
     const hash = await generatePassword(password);
 
     try {
-      const userUuid = await db('users').insert({
-        uuid, name, email, password: hash, age, whatsapp, uf, city,
-      }).returning("uuid");
+      const userUuid = await db('users')
+        .insert({
+          uuid,
+          name,
+          email,
+          password: hash,
+          age,
+          whatsapp,
+          uf,
+          city,
+        })
+        .returning('uuid');
 
       res.status(201).json({ userUuid });
     } catch (err) {
