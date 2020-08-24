@@ -5,7 +5,7 @@ exports.up = async (knex) =>
     .createTable('pets', (table) => {
       table.text('uuid').unique();
       table.text('image').notNullable();
-      table.date('age').notNullable();
+      table.integer('age').notNullable();
       table.text('name').notNullable();
       table.text('category').notNullable();
       table.text('size').notNullable();
