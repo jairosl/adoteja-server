@@ -1,6 +1,6 @@
 import AppError from '../../errors/AppError';
 import db from '../../database';
-import genereteUuid from '../../utils/generateUuid';
+import generateUuid from '../../utils/generateUuid';
 import generatePassword, { verifyPassword } from '../../utils/passwordCrypt';
 
 class useController {
@@ -38,7 +38,7 @@ class useController {
   async create(req, res) {
     const { name, email, password, age, whatsapp, uf, city } = req.body;
 
-    const uuid = await genereteUuid();
+    const uuid = await generateUuid();
 
     const user = await db('users').where({ email });
 
@@ -82,21 +82,17 @@ class useController {
 
     const hash = await generatePassword(password);
 
-    try {
-      await db('users').where({ uuid: id_user }).update({
-        name,
-        email,
-        password: hash,
-        age,
-        whatsapp,
-        uf,
-        city,
-      });
+    await db('users').where({ uuid: id_user }).update({
+      name,
+      email,
+      password: hash,
+      age,
+      whatsapp,
+      uf,
+      city,
+    });
 
-      res.status(202).send();
-    } catch (err) {
-      throw new AppError(err.message, 406);
-    }
+    res.status(200).send();
   }
 
   async delete(req, res) {
@@ -111,12 +107,8 @@ class useController {
 
     if (key === false) throw new AppError('Password invalid', 406);
 
-    try {
-      await db('users').where({ uuid: id_user }).del();
-      res.status(200).send();
-    } catch (err) {
-      throw new AppError(err.message);
-    }
+    await db('users').where({ uuid: id_user }).del();
+    res.status(200).send();
   }
 }
 

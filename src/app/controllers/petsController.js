@@ -36,21 +36,25 @@ class PetsController {
 
     const pets = await db('pets')
       .where({ uuid_user })
-      .where('pets.age', age)
+      .where('pets.age', Number(age))
       .where('pets.category', category)
       .where('pets.size', size)
       .join('users', 'pets.uuid_user', 'users.uuid')
       .where('uf', uf)
       .where('city', city)
-      .select(
+      .select([
         { uuid_pet: 'pets.uuid' },
         'image',
         { name_pet: 'pets.name' },
         'email',
-        'whatsapp'
-      );
+        'whatsapp',
+      ]);
 
     res.json(pets);
+  }
+
+  async index(req, res) {
+    res.json({ ok: true });
   }
 }
 
