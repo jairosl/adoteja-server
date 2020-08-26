@@ -13,6 +13,10 @@ class useController {
 
     if (count <= limit || totalPages === 0) {
       const users = await db('users').select('*');
+      users.forEach((user) => {
+        delete user.password;
+      });
+
       return res.json(users);
     }
 
@@ -24,6 +28,7 @@ class useController {
       const users = await db('users')
         .limit(limit)
         .offset((page - 1) * limit);
+      delete users.password;
       return res.json({ totalPages, users });
     } catch (err) {
       throw new Error(err.message);
