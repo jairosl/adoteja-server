@@ -26,6 +26,28 @@ class PetsController {
 
     res.json(pet);
   }
+
+  async show(req, res) {
+    const { uuid_user } = req;
+
+    const user = await db('users').where({ uuid: uuid_user }).first();
+    if (!user) throw new AppError('User not found');
+
+    const pets = await db('pets')
+      .where({ uuid_user })
+      .join('users', 'pets.uuid_user', '=', 'users.uuid')
+      .select(
+        { uuid_pet: 'pets.uuid' },
+        'image',
+        { name_pet: 'pets.name' },
+        'category',
+        'size',
+        'email',
+        'whatsapp'
+      );
+
+    res.json(pets);
+  }
 }
 
 export default PetsController;
