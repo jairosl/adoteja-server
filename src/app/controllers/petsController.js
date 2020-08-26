@@ -29,19 +29,23 @@ class PetsController {
 
   async show(req, res) {
     const { uuid_user } = req;
+    const { uf, city, category, size, age } = req.query;
 
     const user = await db('users').where({ uuid: uuid_user }).first();
     if (!user) throw new AppError('User not found');
 
     const pets = await db('pets')
       .where({ uuid_user })
-      .join('users', 'pets.uuid_user', '=', 'users.uuid')
+      .where('pets.age', age)
+      .where('pets.category', category)
+      .where('pets.size', size)
+      .join('users', 'pets.uuid_user', 'users.uuid')
+      .where('uf', uf)
+      .where('city', city)
       .select(
         { uuid_pet: 'pets.uuid' },
         'image',
         { name_pet: 'pets.name' },
-        'category',
-        'size',
         'email',
         'whatsapp'
       );
