@@ -22,7 +22,7 @@ class PetsController {
         category,
         size,
       })
-      .returning('uuid', 'name');
+      .returning(['uuid', 'name']);
 
     res.json(pet);
   }
@@ -68,7 +68,12 @@ class PetsController {
         { category_pet: 'pets.category' },
         'email',
         'whatsapp',
-      ]);
+      ])
+      .first();
+
+    if (!pet) {
+      throw new AppError('Pet not found');
+    }
 
     res.json(pet);
   }

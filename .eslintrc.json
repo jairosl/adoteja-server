@@ -23,6 +23,7 @@
     "no-param-reassign": "off",
     "no-unused-vars": ["error", { "argsIgnorePattern": "next" }],
     "camelcase": "off",
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "no-unused-expressions": "off"
   }
 }

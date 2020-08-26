@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import AppError from '../../errors/AppError';
 import db from '../../database';
 import generateUuid from '../../utils/generateUuid';
@@ -106,6 +108,17 @@ class useController {
     const key = await verifyPassword(password, user.password);
 
     if (key === false) throw new AppError('Password invalid', 406);
+
+    const images = await db('pets')
+      .where('pets.uuid_user', user.uuid)
+      .select('image');
+
+    !!images &&
+      images.forEach(({ image }) =>
+        fs.unlinkSync(
+          path.resolve(__dirname, '..', '..', '..', 'temp', `${image}`)
+        )
+      );
 
     await db('users').where({ uuid: id_user }).del();
     res.status(200).send();
