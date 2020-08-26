@@ -22,7 +22,7 @@ class PetsController {
         category,
         size,
       })
-      .returning('*');
+      .returning('uuid', 'name');
 
     res.json(pet);
   }
@@ -54,7 +54,23 @@ class PetsController {
   }
 
   async index(req, res) {
-    res.json({ ok: true });
+    const { uuid_pet: uuid } = req.params;
+
+    const pet = await db('pets')
+      .where('pets.uuid', uuid)
+      .join('users', 'pets.uuid_user', 'users.uuid')
+      .select([
+        { uuid_pet: 'pets.uuid' },
+        'image',
+        { name_pet: 'pets.name' },
+        { age_pet: 'pets.age' },
+        { size_pet: 'pets.size' },
+        { category_pet: 'pets.category' },
+        'email',
+        'whatsapp',
+      ]);
+
+    res.json(pet);
   }
 }
 
