@@ -13,5 +13,6 @@ const petsController = new PetsController();
 petsRoutes.use(authenticateJWT);
 
 petsRoutes.post('/', upload.single('image'), petsController.create);
+petsRoutes.get('/', petsController.show);
 
 export default petsRoutes;
