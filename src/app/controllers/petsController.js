@@ -84,9 +84,24 @@ class PetsController {
     const { uuid_pet: uuid } = req.params;
     const { name, age, category, size } = req.body;
 
-    const pet = await db('pets').where({ uuid }).first();
+    const pet = await db('pets')
+      .where({ uuid })
+      .where({ uuid_user: req.uuid_user })
+      .first();
 
-    if (!pet) throw new AppError('Pet not Found');
+    if (!pet) {
+      fs.unlinkSync(
+        path.resolve(
+          __dirname,
+          '..',
+          '..',
+          '..',
+          'temp',
+          `${req.file.filename}`
+        )
+      );
+      throw new AppError('Pet not Found');
+    }
 
     if (!req.file) {
       await db('pets').where({ uuid }).update({
