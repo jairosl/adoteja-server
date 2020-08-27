@@ -3,7 +3,9 @@ import path from 'path';
 import AppError from '../../errors/AppError';
 import db from '../../database';
 import generateUuid from '../../utils/generateUuid';
-import generatePassword, { verifyPassword } from '../../utils/passwordCrypt';
+import generateHashPassword, {
+  verifyPassword,
+} from '../../utils/passwordCrypt';
 
 class useController {
   async index(req, res) {
@@ -46,7 +48,7 @@ class useController {
 
     if (user.length !== 0) throw new AppError('User already exists');
 
-    const hash = await generatePassword(password);
+    const hash = await generateHashPassword(password);
 
     try {
       const userUuid = await db('users')
@@ -82,7 +84,7 @@ class useController {
       throw new AppError('User not found');
     }
 
-    const hash = await generatePassword(password);
+    const hash = await generateHashPassword(password);
 
     await db('users').where({ uuid: id_user }).update({
       name,
