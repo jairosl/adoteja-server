@@ -19,5 +19,6 @@ petsRoutes.get('/:uuid_pet', petsController.index);
 
 petsRoutes.post('/', upload.single('image'), petsController.create);
 petsRoutes.put('/:uuid_pet', upload.single('image'), petsController.update);
+petsRoutes.delete('/:uuid_pet', petsController.delete);
 
 export default petsRoutes;

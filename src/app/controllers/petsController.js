@@ -114,6 +114,22 @@ class PetsController {
     }
   }
 
+  async delete(req, res) {
+    const { uuid_pet: uuid } = req.params;
+
+    const pet = await db('pets').where({ uuid }).first();
+
+    if (!pet) throw new AppError('Pet not Found');
+
+    await db('pets').where({ uuid }).where('uuid_user', req.uuid_user).del();
+
+    fs.unlinkSync(
+      path.resolve(__dirname, '..', '..', '..', 'temp', `${pet.image}`)
+    );
+
+    res.status(200).send();
+  }
+
   async showAllbyLocationAndQueryParams(req, res) {
     const { uf, city, category, size, age } = req.query;
 
