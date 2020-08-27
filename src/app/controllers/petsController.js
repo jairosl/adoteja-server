@@ -77,6 +77,28 @@ class PetsController {
 
     res.json(pet);
   }
+
+  async showAllbyLocation(req, res) {
+    const { uf, city } = req.query;
+
+    if (!uf || !city) throw new AppError('Necessary to inform uf and city');
+
+    const pets = await db('pets')
+      .join('users', 'pets.uuid_user', 'users.uuid')
+      .where({ uf, city })
+      .select([
+        { uuid_pet: 'pets.uuid' },
+        'image',
+        { name_pet: 'pets.name' },
+        { category_pet: 'pets.category' },
+        { size_pet: 'pets.size' },
+        { age_pet: 'pets.age' },
+        'email',
+        'whatsapp',
+      ]);
+
+    res.json(pets);
+  }
 }
 
 export default PetsController;

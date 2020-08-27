@@ -10,6 +10,8 @@ const petsRoutes = Router();
 
 const petsController = new PetsController();
 
+petsRoutes.get('/', petsController.showAllbyLocation);
+
 petsRoutes.use(authenticateJWT);
 
 petsRoutes.post('/', upload.single('image'), petsController.create);
