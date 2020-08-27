@@ -10,7 +10,7 @@ const petsRoutes = Router();
 
 const petsController = new PetsController();
 
-petsRoutes.get('/', petsController.showAllbyLocation);
+petsRoutes.get('/', petsController.showAllbyLocationAndQueryParams);
 
 petsRoutes.use(authenticateJWT);
 

@@ -78,14 +78,13 @@ class PetsController {
     res.json(pet);
   }
 
-  async showAllbyLocation(req, res) {
-    const { uf, city } = req.query;
-
-    if (!uf || !city) throw new AppError('Necessary to inform uf and city');
+  async showAllbyLocationAndQueryParams(req, res) {
+    const { uf, city, category, size, age } = req.query;
 
     const pets = await db('pets')
       .join('users', 'pets.uuid_user', 'users.uuid')
-      .where({ uf, city })
+      .where('pets.age', Number(age))
+      .where({ uf, city, category, size })
       .select([
         { uuid_pet: 'pets.uuid' },
         'image',
@@ -93,6 +92,7 @@ class PetsController {
         { category_pet: 'pets.category' },
         { size_pet: 'pets.size' },
         { age_pet: 'pets.age' },
+        { ower: 'users.name' },
         'email',
         'whatsapp',
       ]);
