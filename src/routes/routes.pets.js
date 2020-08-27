@@ -14,8 +14,10 @@ petsRoutes.get('/', petsController.showAllbyLocationAndQueryParams);
 
 petsRoutes.use(authenticateJWT);
 
-petsRoutes.post('/', upload.single('image'), petsController.create);
 petsRoutes.get('/user', petsController.show);
 petsRoutes.get('/:uuid_pet', petsController.index);
+
+petsRoutes.post('/', upload.single('image'), petsController.create);
+petsRoutes.put('/:uuid_pet', upload.single('image'), petsController.update);
 
 export default petsRoutes;

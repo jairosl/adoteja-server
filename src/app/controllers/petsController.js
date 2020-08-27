@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import db from '../../database';
 import AppError from '../../errors/AppError';
 import generateUuid from '../../utils/generateUuid';
@@ -76,6 +78,40 @@ class PetsController {
     }
 
     res.json(pet);
+  }
+
+  async update(req, res) {
+    const { uuid_pet: uuid } = req.params;
+    const { name, age, category, size } = req.body;
+
+    const pet = await db('pets').where({ uuid }).first();
+
+    if (!pet) throw new AppError('Pet not Found');
+
+    if (!req.file) {
+      await db('pets').where({ uuid }).update({
+        name,
+        age,
+        category,
+        size,
+      });
+
+      res.status(200).send();
+    } else {
+      fs.unlinkSync(
+        path.resolve(__dirname, '..', '..', '..', 'temp', `${pet.image}`)
+      );
+
+      await db('pets').where({ uuid }).update({
+        name,
+        age,
+        category,
+        size,
+        image: req.file.filename,
+      });
+
+      res.status(200).send();
+    }
   }
 
   async showAllbyLocationAndQueryParams(req, res) {
