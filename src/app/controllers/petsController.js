@@ -46,7 +46,7 @@ class PetsController {
       .insert({
         uuid,
         uuid_user: req.uuid_user,
-        image: req.file.filename,
+        image: req.file.key,
         name,
         age,
         category,
@@ -144,14 +144,7 @@ class PetsController {
 
     if (!pet) {
       fs.unlinkSync(
-        path.resolve(
-          __dirname,
-          '..',
-          '..',
-          '..',
-          'temp',
-          `${req.file.filename}`
-        )
+        path.resolve(__dirname, '..', '..', '..', 'temp', `${req.file.key}`)
       );
       throw new AppError('Pet not Found');
     }
@@ -175,7 +168,7 @@ class PetsController {
         age,
         category,
         size,
-        image: req.file.filename,
+        image: req.file.key,
       });
 
       res.status(200).send();
