@@ -1,16 +1,32 @@
 import fs from 'fs';
 import path from 'path';
+import * as Yup from 'yup';
 import db from '../../database';
 import AppError from '../../errors/AppError';
 import generateUuid from '../../utils/generateUuid';
+import isErrors from '../../utils/validationSchema';
 
 class PetsController {
   async create(req, res) {
     const { name, age, category, size } = req.body;
 
+    const schema = Yup.object().shape({
+      name: Yup.string().required('Name is required'),
+      age: Yup.number()
+        .required('Age is required')
+        .positive('Age have to be positive')
+        .integer(),
+      category: Yup.string().required('Category is required'),
+      size: Yup.string().required('Size is required'),
+    });
+
+    const statusError = isErrors(schema, req.body);
+    if (statusError !== false) throw new AppError(statusError);
+
     const user = await db('users').where({ uuid: req.uuid_user }).first();
 
     if (!user) throw new AppError('User not found');
+    if (!req.file) throw new AppError('Image is required');
 
     const uuid = await generateUuid();
 

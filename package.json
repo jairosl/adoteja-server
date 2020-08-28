@@ -31,7 +31,8 @@
     "knex": "^0.21.5",
     "multer": "^1.4.2",
     "pg": "^8.3.2",
-    "uuid": "^8.3.0"
+    "uuid": "^8.3.0",
+    "yup": "^0.29.3"
   },
   "devDependencies": {
     "@commitlint/cli": "^9.1.1",
