@@ -3,7 +3,7 @@ const isErrors = (schema, data) => {
     schema.validateSync(data, { abortEarly: false });
     return false;
   } catch (e) {
-    const messages = e.errors.toString();
+    const messages = e.errors;
     return messages;
   }
 };

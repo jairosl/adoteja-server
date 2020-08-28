@@ -21,7 +21,19 @@ class PetsController {
     });
 
     const statusError = isErrors(schema, req.body);
-    if (statusError !== false) throw new AppError(statusError);
+    if (statusError !== false) {
+      fs.unlinkSync(
+        path.resolve(
+          __dirname,
+          '..',
+          '..',
+          '..',
+          'temp',
+          `${req.file.filename}`
+        )
+      );
+      throw new AppError(statusError);
+    }
 
     const user = await db('users').where({ uuid: req.uuid_user }).first();
 
@@ -100,6 +112,31 @@ class PetsController {
     const { uuid_pet: uuid } = req.params;
     const { name, age, category, size } = req.body;
 
+    const schema = Yup.object().shape({
+      name: Yup.string().required('Name is required'),
+      age: Yup.number()
+        .required('Age is required')
+        .positive('Age have to be positive')
+        .integer(),
+      category: Yup.string().required('Category is required'),
+      size: Yup.string().required('Size is required'),
+    });
+
+    const statusError = isErrors(schema, req.body);
+    if (statusError !== false) {
+      fs.unlinkSync(
+        path.resolve(
+          __dirname,
+          '..',
+          '..',
+          '..',
+          'temp',
+          `${req.file.filename}`
+        )
+      );
+      throw new AppError(statusError);
+    }
+
     const pet = await db('pets')
       .where({ uuid })
       .where({ uuid_user: req.uuid_user })
@@ -163,6 +200,20 @@ class PetsController {
 
   async showAllbyLocationAndQueryParams(req, res) {
     const { uf, city, category, size, age } = req.query;
+
+    const schema = Yup.object().shape({
+      age: Yup.number()
+        .required('Age is required')
+        .positive('Age have to be positive')
+        .integer(),
+      category: Yup.string().required('Category is required'),
+      size: Yup.string().required('Size is required'),
+      uf: Yup.string().required('Uf is required'),
+      city: Yup.string().required('City is required'),
+    });
+
+    const statusError = isErrors(schema, req.query);
+    if (statusError !== false) throw new AppError(statusError);
 
     const pets = await db('pets')
       .join('users', 'pets.uuid_user', 'users.uuid')
