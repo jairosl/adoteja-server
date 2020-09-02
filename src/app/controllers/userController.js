@@ -76,12 +76,15 @@ class useController {
 
     const user = await db('users').where({ uuid: id_user }).first();
 
+    if (!user) throw new AppError('User not found');
+
     const userEmailExist = await db('users')
       .whereNot({ uuid: id_user })
-      .where({ email });
+      .where({ email })
+      .first();
 
-    if (!user || userEmailExist.length >= 1) {
-      throw new AppError('User not found');
+    if (userEmailExist) {
+      throw new AppError('E-mail already registered');
     }
 
     const hash = await generateHashPassword(password);
