@@ -17,7 +17,7 @@ const validationUser = (req, res, next) => {
 
   const statusError = isErrors(schema, req.body);
 
-  if (statusError !== false) {
+  if (statusError) {
     throw new AppError(statusError);
   }
 

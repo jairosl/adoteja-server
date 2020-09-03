@@ -16,7 +16,7 @@ const validationPets = (req, res, next) => {
   });
 
   const statusError = isErrors(schema, req.body);
-  if (statusError !== false) {
+  if (statusError) {
     fs.unlinkSync(
       path.resolve(__dirname, '..', '..', '..', 'temp', `${req.file.filename}`)
     );
@@ -39,7 +39,7 @@ export const validationPetsQuery = (req, res, next) => {
   });
 
   const statusError = isErrors(schema, req.query);
-  if (statusError !== false) throw new AppError(statusError);
+  if (statusError) throw new AppError(statusError);
 
   next();
 };
