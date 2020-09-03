@@ -72,7 +72,7 @@ class useController {
 
   async update(req, res) {
     const { name, email, password, age, whatsapp, uf, city } = req.body;
-    const { id_user } = req.params;
+    const { uuid_user: id_user } = req;
 
     const user = await db('users').where({ uuid: id_user }).first();
 
@@ -104,7 +104,7 @@ class useController {
 
   async delete(req, res) {
     const { password } = req.body;
-    const { id_user } = req.params;
+    const { uuid_user: id_user } = req;
 
     const user = await db('users').where({ uuid: id_user }).first();
 
